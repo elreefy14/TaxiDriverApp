@@ -12,14 +12,16 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
    <application
-        android:label="Mighty Driver"
+        android:label="Masark Driver"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:extractNativeLibs="true"
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         tools:replace="android:label">
        <meta-data
            android:name="com.google.android.geo.API_KEY"
-           android:value="YOUR_MAP_KEY" />
+           android:value="AIzaSyDcWIxw6lRSHR9O8ts9R76d9Z7ZzsFmDa0" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

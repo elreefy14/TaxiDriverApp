@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
 //region App name
-const mAppName = 'Mighty Driver';
+const mAppName = 'Masark Driver';
 //endregion
 
 //region DomainUrl
-const DOMAIN_URL = 'YOUR_BASE_URL'; // Don't add slash at the end of the url
+const DOMAIN_URL =
+    'https://masark-sa.com'; // Don't add slash at the end of the url
 //endregion
 
 //region Google map key
-const GOOGLE_MAP_API_KEY = 'YOUR_MAP_KEY';
+const GOOGLE_MAP_API_KEY = 'AIzaSyDcWIxw6lRSHR9O8ts9R76d9Z7ZzsFmDa0';
 //endregion
 
 //region Currency & country code
@@ -24,9 +25,12 @@ const digitAfterDecimal = 2;
 
 //region OneSignal Keys
 //You have to generate 2 apps on onesignal account one for Rider and one for Driver
-const mOneSignalAppIdDriver = 'YOUR_ONESIGNAL_APP_ID_DRIVER';
-const mOneSignalRestKeyDriver = 'YOUR_ONESIGNAL_AUTH_KEY_DRIVER';
-const mOneSignalDriverChannelID = 'YOUR_ONESIGNAL_CHANNEL_ID_DRIVER';
+const mOneSignalAppIdDriver =
+    'e04b0aae-a5fc-4a7c-acf9-8b6dd1d1d7f2'; // Sample ID - Replace with actual OneSignal App ID
+const mOneSignalRestKeyDriver =
+    'N2IwYzUzYWQtNWMwZS00Y2QzLTk5MDMtZDJkMWM0OWJkY2Fh'; // Sample Key - Replace with actual Rest Key
+const mOneSignalDriverChannelID =
+    'cc54d7cd-0cc8-4704-b886-df868bd4e6f3'; // Sample Channel ID - Replace with actual Channel ID
 
 const mOneSignalAppIdRider = 'YOUR_ONESIGNAL_APP_ID_RIDER';
 const mOneSignalRestKeyRider = 'YOUR_ONESIGNAL_AUTH_KEY_RIDER';
@@ -35,9 +39,9 @@ const mOneSignalRiderChannelID = 'YOUR_ONESIGNAL_CHANNEL_ID_RIDER';
 
 //region firebase configuration
 // FIREBASE VALUES FOR ANDROID APP
-const projectId = 'YOUR_FIREBASE_PROJECT_ID';
-const appIdAndroid = 'YOUR_FIREBASE_ANDROID_APP_ID';
-const apiKeyFirebase = 'YOUR_FIREBASE_API_KEY';
+const projectId = 'masark-driver';
+const appIdAndroid = '1:522987428134:android:84fbad3fcad67cad9bd9c2';
+const apiKeyFirebase = 'AIzaSyBE1nTnXnhh0MmLcbdmOOO7D3SXAEy8Ceo';
 const messagingSenderId = '522987428134';
 const storageBucket = '$projectId.appspot.com';
 const authDomain = "$projectId.firebaseapp.com";

@@ -43,41 +43,56 @@ class SplashScreenState extends State<SplashScreen> {
     await Future.delayed(Duration(seconds: 1));
     if (sharedPref.getBool(IS_FIRST_TIME) ?? true) {
       await Geolocator.requestPermission().then((value) async {
-        launchScreen(context, WalkThroughScreen(), pageRouteAnimation: PageRouteAnimation.Slide, isNewTask: true);
+        launchScreen(context, WalkThroughScreen(),
+            pageRouteAnimation: PageRouteAnimation.Slide, isNewTask: true);
         Geolocator.getCurrentPosition().then((value) {
           sharedPref.setDouble(LATITUDE, value.latitude);
           sharedPref.setDouble(LONGITUDE, value.longitude);
         });
       }).catchError((e) {
-        launchScreen(context, WalkThroughScreen(), pageRouteAnimation: PageRouteAnimation.Slide, isNewTask: true);
+        launchScreen(context, WalkThroughScreen(),
+            pageRouteAnimation: PageRouteAnimation.Slide, isNewTask: true);
       });
     } else {
-      if (sharedPref.getString(CONTACT_NUMBER).validate().isEmptyOrNull && appStore.isLoggedIn) {
-        launchScreen(context, EditProfileScreen(isGoogle: true), isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
-      } else if (sharedPref.getString(UID).validate().isEmptyOrNull && appStore.isLoggedIn) {
+      if (sharedPref.getString(CONTACT_NUMBER).validate().isEmptyOrNull &&
+          appStore.isLoggedIn) {
+        launchScreen(context, EditProfileScreen(isGoogle: true),
+            isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
+      } else if (sharedPref.getString(UID).validate().isEmptyOrNull &&
+          appStore.isLoggedIn) {
         updateProfileUid().then((value) {
           if (sharedPref.getInt(IS_Verified_Driver) == 1) {
-            launchScreen(context, DashboardScreen(), isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
+            launchScreen(context, DashboardScreen(),
+                isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
           } else {
-            launchScreen(context, DocumentsScreen(isShow: true), isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
+            launchScreen(context, DocumentsScreen(isShow: true),
+                isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
           }
         });
-      } else if (sharedPref.getInt(IS_Verified_Driver) == 0 && appStore.isLoggedIn) {
-        launchScreen(context, DocumentsScreen(isShow: true), pageRouteAnimation: PageRouteAnimation.Slide, isNewTask: true);
-      } else if (sharedPref.getInt(IS_Verified_Driver) == 1 && appStore.isLoggedIn) {
-        launchScreen(context, DashboardScreen(), pageRouteAnimation: PageRouteAnimation.SlideBottomTop, isNewTask: true);
+      } else if (sharedPref.getInt(IS_Verified_Driver) == 0 &&
+          appStore.isLoggedIn) {
+        launchScreen(context, DocumentsScreen(isShow: true),
+            pageRouteAnimation: PageRouteAnimation.Slide, isNewTask: true);
+      } else if (sharedPref.getInt(IS_Verified_Driver) == 1 &&
+          appStore.isLoggedIn) {
+        launchScreen(context, DashboardScreen(),
+            pageRouteAnimation: PageRouteAnimation.SlideBottomTop,
+            isNewTask: true);
       } else {
-        launchScreen(context, SignInScreen(), pageRouteAnimation: PageRouteAnimation.Slide, isNewTask: true);
+        launchScreen(context, SignInScreen(),
+            pageRouteAnimation: PageRouteAnimation.Slide, isNewTask: true);
       }
     }
   }
 
   Future<void> driverDetail() async {
     if (appStore.isLoggedIn) {
-      await getUserDetail(userId: sharedPref.getInt(USER_ID)).then((value) async {
+      await getUserDetail(userId: sharedPref.getInt(USER_ID))
+          .then((value) async {
         await sharedPref.setInt(IS_ONLINE, value.data!.isOnline!);
         if (value.data!.status == REJECT || value.data!.status == BANNED) {
-          toast('${language.yourAccountIs} ${value.data!.status}. ${language.pleaseContactSystemAdministrator}');
+          toast(
+              '${language.yourAccountIs} ${value.data!.status}. ${language.pleaseContactSystemAdministrator}');
           logout();
         }
         appStore.setUserEmail(value.data!.email.validate());
@@ -105,9 +120,17 @@ class SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(ic_logo_white, fit: BoxFit.contain, height: 150, width: 150),
+            Image.asset(ic_logo_white,
+                fit: BoxFit.contain, height: 150, width: 150),
             SizedBox(height: 16),
             Text(mAppName, style: boldTextStyle(color: Colors.white, size: 22)),
+            SizedBox(height: 8),
+            Text('مسارك هو اختيارك',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center),
           ],
         ),
       ),
@@ -115,7 +138,8 @@ class SplashScreenState extends State<SplashScreen> {
   }
 
   void _checkNotifyPermission() async {
-    String versionNo = sharedPref.getString(CURRENT_LAN_VERSION) ?? LanguageVersion;
+    String versionNo =
+        sharedPref.getString(CURRENT_LAN_VERSION) ?? LanguageVersion;
 
     await getLanguageList(versionNo).then((value) {
       appStore.setLoading(false);
@@ -126,13 +150,16 @@ class SplashScreenState extends State<SplashScreen> {
           defaultServerLanguageData = value.data;
           performLanguageOperation(defaultServerLanguageData);
           setValue(LanguageJsonDataRes, value.toJson());
-          bool isSetLanguage = sharedPref.getBool(IS_SELECTED_LANGUAGE_CHANGE) ?? false;
+          bool isSetLanguage =
+              sharedPref.getBool(IS_SELECTED_LANGUAGE_CHANGE) ?? false;
           if (!isSetLanguage) {
             for (int i = 0; i < value.data!.length; i++) {
               if (value.data![i].isDefaultLanguage == 1) {
                 setValue(SELECTED_LANGUAGE_CODE, value.data![i].languageCode);
-                setValue(SELECTED_LANGUAGE_COUNTRY_CODE, value.data![i].countryCode);
-                appStore.setLanguage(value.data![i].languageCode!, context: context);
+                setValue(
+                    SELECTED_LANGUAGE_COUNTRY_CODE, value.data![i].countryCode);
+                appStore.setLanguage(value.data![i].languageCode!,
+                    context: context);
                 break;
               }
             }
@@ -145,7 +172,8 @@ class SplashScreenState extends State<SplashScreen> {
       } else {
         String getJsonData = sharedPref.getString(LanguageJsonDataRes) ?? '';
         if (getJsonData.isNotEmpty) {
-          ServerLanguageResponse languageSettings = ServerLanguageResponse.fromJson(json.decode(getJsonData.trim()));
+          ServerLanguageResponse languageSettings =
+              ServerLanguageResponse.fromJson(json.decode(getJsonData.trim()));
           if (languageSettings.data!.length > 0) {
             defaultServerLanguageData = languageSettings.data;
             performLanguageOperation(defaultServerLanguageData);

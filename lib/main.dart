@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,11 +18,13 @@ import 'package:taxi_driver/utils/Colors.dart';
 import 'package:taxi_driver/utils/Common.dart';
 import 'package:taxi_driver/utils/Constants.dart';
 import 'package:taxi_driver/utils/Extensions/dataTypeExtensions.dart';
+import 'package:taxi_driver/test_api.dart';
 
 import 'AppTheme.dart';
 import 'Services/ChatMessagesService.dart';
 import 'Services/NotificationService.dart';
 import 'Services/UserServices.dart';
+import 'firebase_options.dart';
 import 'languageConfiguration/AppLocalizations.dart';
 import 'languageConfiguration/BaseLanguage.dart';
 import 'languageConfiguration/LanguageDataConstant.dart';
@@ -61,34 +63,39 @@ var app_update_check = null;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (Platform.isIOS) {
-    await Firebase.initializeApp().then((value) {});
-  } else {
-    try {
-      await Firebase.initializeApp(
-        options: FirebaseOptions(apiKey: apiKeyFirebase, authDomain: authDomain, projectId: projectId, storageBucket: storageBucket, messagingSenderId: messagingSenderId, appId: appIdAndroid),
-      ).then((value) {});
-    } catch (e) {
-      await Firebase.initializeApp();
-    }
-  }
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Enable Crashlytics in non-debug mode
+  await FirebaseCrashlytics.instance
+      .setCrashlyticsCollectionEnabled(!kDebugMode);
+
   FlutterError.onError = (
     errorDetails,
   ) {
-    FirebaseCrashlytics.instance.recordError(errorDetails.exception, errorDetails.stack, fatal: true);
+    FirebaseCrashlytics.instance
+        .recordError(errorDetails.exception, errorDetails.stack, fatal: true);
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
   PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordFlutterError(FlutterErrorDetails(exception: error, stack: stack));
+    FirebaseCrashlytics.instance.recordFlutterError(
+        FlutterErrorDetails(exception: error, stack: stack));
     FirebaseCrashlytics.instance.recordError(error, stack);
     return true;
   };
   sharedPref = await SharedPreferences.getInstance();
-  appStore.setLanguage(sharedPref.getString(SELECTED_LANGUAGE_CODE) ?? defaultLanguageCode);
-  await appStore.setLoggedIn(sharedPref.getBool(IS_LOGGED_IN) ?? false, isInitializing: true);
-  await appStore.setUserId(sharedPref.getInt(USER_ID) ?? 0, isInitializing: true);
-  await appStore.setUserEmail(sharedPref.getString(USER_EMAIL).validate(), isInitialization: true);
-  await appStore.setUserProfile(sharedPref.getString(USER_PROFILE_PHOTO).validate(), isInitialization: true);
+  appStore.setLanguage(
+      sharedPref.getString(SELECTED_LANGUAGE_CODE) ?? defaultLanguageCode);
+  await appStore.setLoggedIn(sharedPref.getBool(IS_LOGGED_IN) ?? false,
+      isInitializing: true);
+  await appStore.setUserId(sharedPref.getInt(USER_ID) ?? 0,
+      isInitializing: true);
+  await appStore.setUserEmail(sharedPref.getString(USER_EMAIL).validate(),
+      isInitialization: true);
+  await appStore.setUserProfile(
+      sharedPref.getString(USER_PROFILE_PHOTO).validate(),
+      isInitialization: true);
   initJsonFile();
   await oneSignalSettings();
   SystemChrome.setPreferredOrientations([
@@ -117,7 +124,8 @@ class _MyAppState extends State<MyApp> {
     connectivitySubscription = Connectivity().onConnectivityChanged.listen((e) {
       if (e.contains(ConnectivityResult.none)) {
         log('not connected');
-        launchScreen(navigatorKey.currentState!.overlay!.context, NoInternetScreen());
+        launchScreen(
+            navigatorKey.currentState!.overlay!.context, NoInternetScreen());
       } else {
         if (netScreenKey.currentContext != null) {
           if (Navigator.canPop(navigatorKey.currentState!.overlay!.context)) {
@@ -148,8 +156,11 @@ class _MyAppState extends State<MyApp> {
           return ScrollConfiguration(behavior: MyBehavior(), child: child!);
         },
         home: SplashScreen(),
-        supportedLocales: getSupportedLocales(),
-        locale: Locale(appStore.selectedLanguage.validate(value: defaultLanguageCode)),
+        supportedLocales: [
+          Locale('en', 'US'),
+          Locale('ar', 'SA'),
+        ],
+        locale: Locale('en', 'US'),
         localizationsDelegates: [
           AppLocalizations(),
           CountryLocalizations.delegate,

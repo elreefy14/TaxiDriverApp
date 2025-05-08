@@ -3,6 +3,7 @@ plugins {
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
     id "com.google.gms.google-services"
+    id 'com.google.firebase.crashlytics'
 }
 
 
@@ -64,10 +65,13 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:33.1.2')
     implementation("com.google.firebase:firebase-crashlytics")
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation('com.braintreepayments.api:drop-in:5.2.1') {
-        exclude group: "org.jfrog.cardinalcommerce.gradle", module: "cardinalmobilesdk"
-    }
-    implementation("org.jfrog.cardinalcommerce.gradle:cardinalmobilesdk:2.2.7-2")
+    // Material Components dependency
+    implementation 'com.google.android.material:material:1.9.0'
+    // Removed payment dependencies
+    // implementation('com.braintreepayments.api:drop-in:5.2.1') {
+    //     exclude group: "org.jfrog.cardinalcommerce.gradle", module: "cardinalmobilesdk"
+    // }
+    // implementation("org.jfrog.cardinalcommerce.gradle:cardinalmobilesdk:2.2.7-2")
 }
 
 configurations.all {

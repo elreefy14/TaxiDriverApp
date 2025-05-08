@@ -1,14 +1,14 @@
 buildscript {
-    ext.kotlin_version = '1.9.24'
+    ext.kotlin_version = '2.0.0'
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath 'com.android.tools.build:gradle:8.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.3.14'
+        classpath 'com.google.gms:google-services:4.4.1'
     }
 }
 
@@ -18,6 +18,13 @@ allprojects {
         mavenCentral()
         maven {
             url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+        maven {
+            url 'https://cardinalcommerceprod.jfrog.io/artifactory/android'
+            credentials {
+                username 'android-team@cardinalcommerce.com'
+                password 'Gr+z0ld4@jP9'
+            }
         }
     }
 }
